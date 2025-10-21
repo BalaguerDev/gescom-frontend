@@ -1,23 +1,18 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "@/pages/Dashboard";
 import RequireAuth from "@/auth/RequireAuth";
+import Layout from "../layout/Layout";
+import { routes } from "@/utils/menuItems";
 
 const AppRouter = () => (
   <Routes>
-    {/* Redirige la raíz hacia /dashboard */}
     <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-    {/* Dashboard protegido */}
-    <Route
-      path="/dashboard"
-      element={
-        <RequireAuth>
-          <Dashboard />
-        </RequireAuth>
-      }
-    />
+    <Route element={<RequireAuth><Layout /></RequireAuth>}>
+      {routes.map(({ path, Component }) => (
+        <Route key={path} path={path} element={<Component />} />
+      ))}
+    </Route>
 
-    {/* Cualquier ruta no válida → /dashboard */}
     <Route path="*" element={<Navigate to="/dashboard" replace />} />
   </Routes>
 );
