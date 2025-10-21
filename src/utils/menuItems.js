@@ -1,14 +1,14 @@
-import { Users, Map, Gift, Target } from "lucide-react";
+import { TrendingUp, Map, Target, Briefcase } from "lucide-react";
 import Dashboard from "@/pages/Dashboard";
-import Clientes from "@/pages/Clientes";
-import Mapa from "@/pages/Mapa";
-import Promociones from "@/pages/Promociones";
-import Prospecciones from "@/pages/Prospecciones";
+import Facturacion from "@/pages/Facturacion";
+import Objetivos from "@/pages/Objetivos";
+import Oportunidades from "@/pages/Oportunidades";
+import ClientesMapa from "@/pages/ClientesMapa";
 
 export const routes = [
   { name: "Dashboard", path: "/dashboard", Component: Dashboard, icon: null },
-  { name: "Clientes", path: "/clientes", Component: Clientes, icon: Users },
-  { name: "Mapa", path: "/mapa", Component: Mapa, icon: Map },
-  { name: "Promociones", path: "/promociones", Component: Promociones, icon: Gift },
-  { name: "Prospecciones", path: "/prospecciones", Component: Prospecciones, icon: Target },
+  { name: "Clientes en mapa", path: "/clientesMapa", Component: ClientesMapa, icon: Map },
+  { name: "Facturacion", path: "/facturacion", Component: Facturacion, icon: TrendingUp },
+  { name: "Objetivos", path: "/objetivos", Component: Objetivos, icon: Target },
+  { name: "Oportunidades", path: "/oportunidades", Component: Oportunidades, icon: Briefcase },
 ];

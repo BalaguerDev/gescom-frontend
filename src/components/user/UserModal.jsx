@@ -16,11 +16,6 @@ const UserModal = ({ isOpen, onClose }) => {
           <X className="w-6 h-6" />
         </button>
         <div className="p-6 flex flex-col items-center space-y-4">
-          <img
-            src={user?.picture}
-            alt={user?.name}
-            className="w-20 h-20 rounded-full"
-          />
           <p className="font-semibold text-gray-800">{user?.name}</p>
           <p className="text-gray-500 text-sm">Comercial</p>
         </div>
