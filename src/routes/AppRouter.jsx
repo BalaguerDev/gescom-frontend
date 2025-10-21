@@ -1,17 +1,13 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { RequireAuth } from "@/auth";
-import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
+import RequireAuth from "@/auth/RequireAuth";
 
 const AppRouter = () => (
   <Routes>
-    {/* Redirección raíz */}
-    <Route path="/" element={<Navigate to="/login" replace />} />
+    {/* Redirige la raíz hacia /dashboard */}
+    <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-    {/* Rutas públicas */}
-    <Route path="/login" element={<Login />} />
-
-    {/* Rutas protegidas */}
+    {/* Dashboard protegido */}
     <Route
       path="/dashboard"
       element={
@@ -21,8 +17,8 @@ const AppRouter = () => (
       }
     />
 
-    {/* Fallback para rutas no encontradas */}
-    <Route path="*" element={<Navigate to="/login" replace />} />
+    {/* Cualquier ruta no válida → /dashboard */}
+    <Route path="*" element={<Navigate to="/dashboard" replace />} />
   </Routes>
 );
 
