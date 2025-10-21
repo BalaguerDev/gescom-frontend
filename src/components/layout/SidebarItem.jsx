@@ -8,7 +8,7 @@ const SidebarItem = ({ name, icon: Icon, path }) => {
   return (
     <button
       onClick={() => navigate(path)}
-      className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition ${
+      className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition cursor-pointer ${
         isActive ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
       }`}
     >
