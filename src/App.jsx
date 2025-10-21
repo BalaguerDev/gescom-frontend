@@ -1,12 +1,10 @@
-import React from "react";
+import { AuthProvider } from "@/auth";
+import AppRouter from "@/routes/AppRouter";
 
-function App() {
-  return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>App Comercial</h1>
-      <p>Frontend listo para empezar 🚀</p>
-    </div>
-  );
+export const App = () => {
+    return (
+        <AuthProvider>
+            <AppRouter />
+        </AuthProvider>
+    );
 }
-
-export default App;
