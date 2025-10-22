@@ -9,8 +9,8 @@ const Facturacion = () => {
 
   return (
     <DataStateHandler
-      loading={loading}                // ✅ aquí va la variable, no el componente
-      error={error}                    // ✅ idem
+      loading={loading}                
+      error={error}                  
       onRetry={reloadClients}
       loadingMessage="Cargando clientes..."
     >
