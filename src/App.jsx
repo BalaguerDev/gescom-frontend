@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import AppRouter from "./routes/AppRouter";
+import AppRouter from "@/routes/AppRouter";
 
 const App = () => {
     const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();

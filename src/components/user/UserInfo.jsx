@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import UserModal from "./UserModal";
-import { CircleUserRound } from "lucide-react"; // o tu icono específico
+import { CircleUserRound } from "lucide-react";
 
 const UserInfo = ({ className }) => {
   const { user } = useAuth0();
