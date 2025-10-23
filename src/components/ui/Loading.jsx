@@ -12,7 +12,7 @@ const Loading = ({ message = "Cargando...", fullscreen = false, size = "md" }) =
     : "flex flex-col items-center justify-center py-8";
 
   return (
-    <div className={containerClasses}>
+    <div className={`${containerClasses} animate-fade-in`} aria-busy="true">
       <Loader2 className={`animate-spin text-gray-600 ${sizeClasses[size]}`} />
       {message && (
         <p className="mt-3 text-sm font-medium text-gray-600 tracking-wide">

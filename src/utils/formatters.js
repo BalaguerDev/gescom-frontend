@@ -1,31 +1,24 @@
-// ✅ Formatea números como moneda en euros
-export const formatCurrency = (value) =>
-  new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(value);
+export const formatters = {
+  currency: (valor) =>
+    typeof valor === "number" && !isNaN(valor)
+      ? valor.toLocaleString("es-ES", { style: "currency", currency: "EUR" })
+      : "– €",
 
-// ✅ Devuelve el color según el crecimiento (positivo o negativo)
-export const getGrowthColor = (growth) =>
-  growth >= 0 ? "text-green-600" : "text-red-600";
+  growthColor: (growth) => (growth >= 0 ? "text-green-600" : "text-red-600"),
 
-// ✅ Trunca textos largos
-export const truncateText = (text, maxLength) => {
-  if (!text) return "";
-  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  truncate: (text, maxLength) =>
+    !text ? "" : text.length > maxLength ? text.slice(0, maxLength) + "..." : text,
+
+  month: (date) => {
+    const name = date.toLocaleString("es-ES", { month: "long" });
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  },
+
+  monthName: (index) =>
+    [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+    ][index] ?? "Mes inválido",
+
+  percentage: (value) => `${(Number(value) || 0).toFixed(1)}%`,
 };
-
-// ✅ Formatea el nombre del mes a partir de una fecha
-export const formatMonth = (date) => {
-  const monthName = date.toLocaleString("es-ES", { month: "long" });
-  return monthName.charAt(0).toUpperCase() + monthName.slice(1);
-};
-
-// ✅ NUEVA FUNCIÓN: obtiene el nombre del mes por índice (0 = enero)
-export const formatMonthName = (monthIndex) => {
-  const meses = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-  ];
-  return meses[monthIndex] ?? "Mes inválido";
-};
-
-// ✅ Formatea porcentaje con una cifra decimal
-export const formatPercentage = (value) => `${value.toFixed(1)}%`;

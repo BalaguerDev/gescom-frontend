@@ -5,9 +5,7 @@ const RequireAuth = ({ children }) => {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      loginWithRedirect();
-    }
+    if (!isLoading && !isAuthenticated) loginWithRedirect();
   }, [isLoading, isAuthenticated, loginWithRedirect]);
 
   if (isLoading) {

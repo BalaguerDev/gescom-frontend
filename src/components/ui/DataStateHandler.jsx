@@ -1,8 +1,8 @@
-import { Loading, Error } from "@/components/ui";
+import { Loading, ErrorState } from "@/components/ui";
 
 const DataStateHandler = ({ loading, error, onRetry, children, loadingMessage }) => {
   if (loading) return <Loading fullscreen message={loadingMessage || "Cargando..."} />;
-  if (error) return <Error fullscreen message={error} onRetry={onRetry} />;
+  if (error) return <ErrorState fullscreen message={error} onRetry={onRetry} />;
   return <>{children}</>;
 };
 

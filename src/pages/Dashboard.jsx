@@ -2,7 +2,7 @@ import { FacturacionCard } from "@/components/facturacion";
 import { useClients } from "@/hooks/useClients";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useFacturacion } from "@/hooks/useFacturacion";
-import { formatMonth } from "@/utils/formatters";
+import { formatters } from "@/utils/formatters";
 
 const Dashboard = () => {
   const { getAccessTokenSilently } = useAuth0();
@@ -12,7 +12,7 @@ const Dashboard = () => {
   const fechaActual = new Date();
   const mesActual = fechaActual.getMonth();
   const añoActual = fechaActual.getFullYear();
-  const nombreMes = formatMonth(fechaActual);
+  const nombreMes = formatters.monthName(fechaActual);
 
   // 🎯 Objetivo mensual (puedes adaptarlo más adelante desde API)
   const objetivos = { mensual: 180_000 };

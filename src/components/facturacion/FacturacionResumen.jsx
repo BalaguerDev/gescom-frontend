@@ -1,4 +1,3 @@
-// FacturacionResumen.jsx
 import { FacturacionCard } from "./FacturacionCard";
 
 export const FacturacionResumen = ({
@@ -12,7 +11,6 @@ export const FacturacionResumen = ({
   progresoAnual,
   vista,
 }) => {
-  // Selecciona los valores según la vista
   const facturado = vista === "anual" ? totalFacturacion : mensualFacturacion;
   const objetivo = vista === "anual" ? objetivoAnual : objetivoMensual;
   const progreso = vista === "anual" ? progresoAnual : progresoMensual;
@@ -22,7 +20,7 @@ export const FacturacionResumen = ({
       : `Facturación ${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)} de ${añoActual}`;
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       <FacturacionCard
         titulo={titulo}
         facturado={facturado}

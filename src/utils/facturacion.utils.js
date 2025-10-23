@@ -1,11 +1,9 @@
-export const calcularFacturacion = (clients, mesActual) => {
+export const calcularFacturacion = (clients = [], mesActual) => {
   const total = clients.reduce((sum, c) => sum + (c.totalCurrent || 0), 0);
-
-  const mensual = clients.reduce((sum, c) => {
-    const factMes = c.revenueCurrentYear?.[mesActual] || 0;
-    return sum + factMes;
-  }, 0);
-
+  const mensual = clients.reduce(
+    (sum, c) => sum + (c.revenueCurrentYear?.[mesActual] || 0),
+    0
+  );
   return { total, mensual };
 };
 

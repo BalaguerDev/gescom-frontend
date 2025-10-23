@@ -1,5 +1,4 @@
 
-// Solo un placeholder básico para evitar el error
 export const Select = ({ children, value, onValueChange }) => (
   <select value={value} onChange={e => onValueChange(e.target.value)}>
     {children}

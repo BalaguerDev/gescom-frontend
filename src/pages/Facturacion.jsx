@@ -4,7 +4,7 @@ import { DataStateHandler } from "@/components/ui";
 import { useClients } from "@/hooks/useClients";
 import { FacturacionResumen } from "@/components/facturacion";
 import ClientList from "@/components/clients/ClientList";
-import { formatMonth } from "@/utils/formatters";
+import { formatters } from "@/utils/formatters";
 import { useFacturacion } from "@/hooks/useFacturacion";
 
 const Facturacion = () => {
@@ -14,13 +14,13 @@ const Facturacion = () => {
   const fechaActual = new Date();
   const mesActual = fechaActual.getMonth();
   const añoActual = fechaActual.getFullYear();
-  const nombreMes = formatMonth(fechaActual);
+  const nombreMes = formatters.month(fechaActual);
 
   const objetivos = { anual: 2_200_000, mensual: 180_000 };
   const { totalFacturacion, mensualFacturacion, progresoAnual, progresoMensual } =
     useFacturacion(clients, mesActual, objetivos);
 
-  const [vista, setVista] = useState("anual");
+  const [vista, setVista] = useState("mes");
 
   // Agregar revenueCurrentMonth a cada cliente
   const clientsWithMonthly = clients.map(c => ({
@@ -101,21 +101,21 @@ const Facturacion = () => {
           <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">Resumen facturación</h2>
 
           {/* Toggle AÑO / MES */}
-          <div className="relative inline-flex bg-gray-200 rounded-full p-1 text-[12px] font-semibold select-none">
+          <div className="relative inline-flex bg-gray-200 rounded-full p-1 text-[12px] font-semibold select-none ">
             <div
-              className={`absolute top-0 left-0 w-1/2 h-full bg-blue-500 rounded-full transition-all duration-300 ${vista === "mes" ? "translate-x-full" : ""
+              className={`absolute top-0 left-0 w-1/2 h-full bg-blue-500 rounded-full transition-all duration-300 cursor-pointer ${vista === "mes" ? "translate-x-full" : ""
                 }`}
             />
             <button
               onClick={() => setVista("anual")}
-              className={`relative z-10 px-3 py-1 rounded-full transition-colors duration-300 ${vista === "anual" ? "text-white" : "text-gray-800"
+              className={`relative z-10 px-3 py-1 rounded-full transition-colors duration-300 cursor-pointer ${vista === "anual" ? "text-white" : "text-gray-800"
                 }`}
             >
               AÑO
             </button>
             <button
               onClick={() => setVista("mes")}
-              className={`relative z-10 px-3 py-1 rounded-full transition-colors duration-300 ${vista === "mes" ? "text-white" : "text-gray-800"
+              className={`relative z-10 px-3 py-1 rounded-full transition-colors duration-300 cursor-pointer ${vista === "mes" ? "text-white" : "text-gray-800"
                 }`}
             >
               MES
