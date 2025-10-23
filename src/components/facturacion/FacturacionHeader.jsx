@@ -1,32 +1,41 @@
-const FacturacionHeader = ({ vista, setVista }) => (
-  <div className="flex justify-between items-center mb-4">
-    <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
-      Resumen facturación
-    </h2>
+import { useState } from "react";
+import { SearchInput, ToggleVista } from "../ui";
 
-    <div className="relative inline-flex bg-gray-200 rounded-full p-1 text-[12px] font-semibold select-none">
-      <div
-        className={`absolute top-0 left-0 w-1/2 h-full bg-blue-500 rounded-full transition-all duration-300 ${
-          vista === "mes" ? "translate-x-full" : ""
-        }`}
-      />
-      <button
-        onClick={() => setVista("anual")}
-        className={`relative z-10 px-3 py-1 rounded-full ${
-          vista === "anual" ? "text-white" : "text-gray-800"
-        }`}
-      >
-        AÑO
-      </button>
-      <button
-        onClick={() => setVista("mes")}
-        className={`relative z-10 px-3 py-1 rounded-full ${
-          vista === "mes" ? "text-white" : "text-gray-800"
-        }`}
-      >
-        MES
-      </button>
-    </div>
-  </div>
-);
-export default FacturacionHeader;
+export default function FacturacionHeader({ vista, setVista, onSearchChange }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    onSearchChange(value);
+  };
+
+  return (
+    <header className="flex flex-col pb-5 sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+      {/* === 📱 MOBILE === */}
+      <div className="flex flex-col w-full sm:hidden gap-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Resumen facturación
+          </h2>
+          <ToggleVista vista={vista} setVista={setVista} size="sm" />
+        </div>
+
+        <SearchInput value={searchTerm} onChange={handleSearch} />
+      </div>
+
+      {/* === 💻 DESKTOP === */}
+      <div className="hidden sm:flex sm:items-center sm:justify-between w-full gap-6">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Resumen facturación
+        </h2>
+
+        {/* 🔍 Buscador más largo */}
+        <div className="flex-1 max-w-[400px]">
+          <SearchInput value={searchTerm} onChange={handleSearch} />
+        </div>
+
+        <ToggleVista vista={vista} setVista={setVista} />
+      </div>
+    </header>
+  );
+}

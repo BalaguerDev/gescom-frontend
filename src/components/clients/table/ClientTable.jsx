@@ -24,14 +24,15 @@ const ClientTable = ({ clients = [], onSelect, vista, mesActual, añoActual }) =
   return (
     <>
       {/* 🔹 Móvil */}
-      <ClientTableMobile
-        clients={clients}
-        onSelect={onSelect}
-        headerAnterior={headerAnterior}
-        headerActual={headerActual}
-        vista={vista}
-
-      />
+      <div className="overflow-y-auto sm:pb-6 pb-15">
+        <ClientTableMobile
+          clients={clients}
+          onSelect={onSelect}
+          headerAnterior={headerAnterior}
+          headerActual={headerActual}
+          vista={vista}
+        />
+      </div>
 
       {/* 🔹 Escritorio */}
       <div className="hidden sm:block overflow-y-auto max-h-[90vh] mt-4 border border-gray-200 rounded-lg">

@@ -25,8 +25,9 @@ const Facturacion = () => {
 
   const [vista, setVista] = useState("mes");
   const [showInactivosModal, setShowInactivosModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // 🧮 Calcular clientes inactivos
+  // 🧮 Clientes inactivos
   const clientesInactivosLista = clients.filter((c) => {
     if (!c.orders?.length) return true;
     const lastOrder = Math.max(...c.orders.map((o) => new Date(o.date)));
@@ -34,7 +35,7 @@ const Facturacion = () => {
     return diffDays > 90;
   });
 
-  // 🧮 Transformar clientes según vista
+  // 🧮 Transformar clientes
   const transformedClients = clients
     .map((c) => {
       const mesData = c.revenueCurrentYear?.find((m) => m.month === mesActual);
@@ -66,10 +67,16 @@ const Facturacion = () => {
     })
     .sort((a, b) => b.displayActual - a.displayActual);
 
+  // 🔍 Filtrar clientes por búsqueda
+  const filteredClients = transformedClients.filter((c) =>
+    c.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <DataStateHandler loading={loading} error={error} onRetry={reloadClients}>
       <div className="space-y-6">
-        <FacturacionHeader vista={vista} setVista={setVista} />
+        <FacturacionHeader vista={vista} setVista={setVista} onSearchChange={setSearchTerm} />
+
         <div className="flex flex-col md:flex-row gap-4">
           <FacturacionResumen
             nombreMes={nombreMes}
@@ -92,7 +99,7 @@ const Facturacion = () => {
         </div>
 
         <FacturacionClientes
-          clients={transformedClients}
+          clients={filteredClients}
           vista={vista}
           mesActual={mesActual}
           añoActual={añoActual}
