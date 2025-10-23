@@ -21,4 +21,14 @@ export const formatters = {
     ][index] ?? "Mes inválido",
 
   percentage: (value) => `${(Number(value) || 0).toFixed(1)}%`,
+  
+  date: (value) => {
+  if (!value) return "–";
+  const date = new Date(value);
+  return date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+},
 };

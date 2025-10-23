@@ -1,6 +1,7 @@
 import { useEffect } from "react";
+import { ArrowLeft, X } from "lucide-react";
 
-const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
+const Modal = ({ isOpen, onClose, title, children, size = "md", arrowBack }) => {
   if (!isOpen) return null;
 
   const sizeClasses = {
@@ -25,15 +26,29 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
         className={`bg-white rounded-2xl shadow-xl w-full ${sizeClasses[size]} p-6 relative transform transition-all scale-100`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Botón cerrar */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition"
-        >
-          ✕
-        </button>
+        {/* HEADER */}
+        <div className="relative flex items-center justify-center mb-4 h-8">
+          {/* Botón Volver */}
+          {arrowBack && (
+            <button
+              onClick={arrowBack}
+              className="absolute left-0 flex items-center gap-1 text-blue-500 hover:text-blue-700 text-[14px] h-full cursor-pointer"
+            >
+              <ArrowLeft size={14} /> Volver
+            </button>
+          )}
 
-        {title && <h2 className="text-xl font-bold mb-4">{title}</h2>}
+          {/* Título centrado */}
+          <h2 className="text-lg font-bold text-center truncate">{title}</h2>
+
+          {/* Botón Cerrar */}
+          <button
+            onClick={onClose}
+            className="absolute right-0 text-gray-400 hover:text-gray-700 flex items-center h-full cursor-pointer"
+          >
+            <X size={14} />
+          </button>
+        </div>
 
         <div className="max-h-[70vh] overflow-y-auto">{children}</div>
       </div>

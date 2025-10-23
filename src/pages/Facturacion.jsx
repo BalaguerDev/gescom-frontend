@@ -3,35 +3,45 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { DataStateHandler } from "@/components/ui";
 import { useClients } from "@/hooks/useClients";
 import { FacturacionResumen } from "@/components/facturacion";
-import ClientList from "@/components/clients/ClientList";
-import { formatters } from "@/utils/formatters";
 import { useFacturacion } from "@/hooks/useFacturacion";
+import FacturacionHeader from "@/components/facturacion/FacturacionHeader";
+import FacturacionIndicadores from "@/components/facturacion/FacturacionIndicadores";
+import FacturacionClientes from "@/components/facturacion/FacturacionClientes";
+import FacturacionModalInactivos from "@/components/facturacion/FacturacionModalInactivos";
+import { formatters } from "@/utils/formatters";
 
 const Facturacion = () => {
   const { getAccessTokenSilently } = useAuth0();
   const { clients, loading, error, reloadClients } = useClients(getAccessTokenSilently);
 
   const fechaActual = new Date();
-const mesActual = fechaActual.getMonth(); 
+  const mesActual = fechaActual.getMonth();
   const añoActual = fechaActual.getFullYear();
   const nombreMes = formatters.month(fechaActual);
-
   const objetivos = { anual: 5_600_000, mensual: 380_000 };
+
   const { totalFacturacion, mensualFacturacion, progresoAnual, progresoMensual } =
     useFacturacion(clients, mesActual, objetivos);
 
   const [vista, setVista] = useState("mes");
+  const [showInactivosModal, setShowInactivosModal] = useState(false);
 
-  // ✅ Extraer correctamente el mes actual de revenueCurrentYear
-  const clientsWithMonthly = clients.map((c) => {
-    const mesData = c.revenueCurrentYear?.find((m) => m.month === mesActual);
-    const mensualActual = mesData?.total ?? 0;
-    return { ...c, revenueCurrentMonth: mensualActual };
+  // 🧮 Calcular clientes inactivos
+  const clientesInactivosLista = clients.filter((c) => {
+    if (!c.orders?.length) return true;
+    const lastOrder = Math.max(...c.orders.map((o) => new Date(o.date)));
+    const diffDays = (fechaActual - lastOrder) / (1000 * 60 * 60 * 24);
+    return diffDays > 90;
   });
 
-  // ✅ Transformar y ordenar clientes según vista
-  const transformedClients = clientsWithMonthly
+  // 🧮 Transformar clientes según vista
+  const transformedClients = clients
     .map((c) => {
+      const mesData = c.revenueCurrentYear?.find((m) => m.month === mesActual);
+      const mensualActual = mesData?.total ?? 0;
+      const mensualAnterior =
+        c.revenueLastYear?.find((m) => m.month === mesActual)?.total ?? 0;
+
       if (vista === "anual") {
         const crecimiento = c.totalLast
           ? ((c.totalCurrent - c.totalLast) / c.totalLast) * 100
@@ -43,9 +53,6 @@ const mesActual = fechaActual.getMonth();
           displayCrecimiento: crecimiento,
         };
       } else {
-        const mensualActual = c.revenueCurrentMonth ?? 0;
-        const mensualAnterior =
-          c.revenueLastYear?.find((m) => m.month === mesActual)?.total ?? 0;
         const crecimiento = mensualAnterior
           ? ((mensualActual - mensualAnterior) / mensualAnterior) * 100
           : 0;
@@ -59,95 +66,11 @@ const mesActual = fechaActual.getMonth();
     })
     .sort((a, b) => b.displayActual - a.displayActual);
 
-  // 🔴 Clientes inactivos
-  const clientesInactivos = clients.filter((c) => {
-    if (!c.orders || c.orders.length === 0) return true;
-    const lastOrder = c.orders.reduce((latest, order) => {
-      const orderDate = new Date(order.date);
-      return orderDate > latest ? orderDate : latest;
-    }, new Date(0));
-    const diffDays = (fechaActual - lastOrder) / (1000 * 60 * 60 * 24);
-    return diffDays > 90;
-  }).length;
-
-  // 🧩 Facturación Top 80%
-  const facturacionTop80 = (() => {
-    const sorted = [...clientsWithMonthly].sort((a, b) =>
-      vista === "anual"
-        ? b.totalCurrent - a.totalCurrent
-        : (b.revenueCurrentMonth ?? 0) - (a.revenueCurrentMonth ?? 0)
-    );
-    const total = clientsWithMonthly.reduce(
-      (sum, c) =>
-        vista === "anual"
-          ? sum + c.totalCurrent
-          : sum + (c.revenueCurrentMonth ?? 0),
-      0
-    );
-
-    let acumulado = 0;
-    let index80 = 0;
-    for (let i = 0; i < sorted.length; i++) {
-      acumulado +=
-        vista === "anual"
-          ? sorted[i].totalCurrent
-          : sorted[i].revenueCurrentMonth ?? 0;
-      if (acumulado / total >= 0.8) {
-        index80 = i + 1;
-        break;
-      }
-    }
-
-    const top80 = sorted.slice(0, index80);
-    return top80.reduce(
-      (sum, c) =>
-        vista === "anual"
-          ? sum + c.totalCurrent
-          : sum + (c.revenueCurrentMonth ?? 0),
-      0
-    );
-  })();
-
   return (
-    <DataStateHandler
-      loading={loading}
-      error={error}
-      onRetry={reloadClients}
-      loadingMessage="Cargando clientes..."
-    >
-      <div>
-        {/* Título + Toggle */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
-            Resumen facturación
-          </h2>
-
-          {/* Toggle AÑO / MES */}
-          <div className="relative inline-flex bg-gray-200 rounded-full p-1 text-[12px] font-semibold select-none">
-            <div
-              className={`absolute top-0 left-0 w-1/2 h-full bg-blue-500 rounded-full transition-all duration-300  ${vista === "mes" ? "translate-x-full" : ""
-                }`}
-            />
-            <button
-              onClick={() => setVista("anual")}
-              className={`relative z-10 px-3 py-1 rounded-full transition-colors cursor-pointer duration-300 ${vista === "anual" ? "text-white" : "text-gray-800"
-                }`}
-            >
-              AÑO
-            </button>
-            <button
-              onClick={() => setVista("mes")}
-              className={`relative z-10 px-3 py-1 rounded-full transition-colors cursor-pointer duration-300 ${vista === "mes" ? "text-white" : "text-gray-800"
-                }`}
-            >
-              MES
-            </button>
-          </div>
-        </div>
-
-        {/* Layout principal */}
+    <DataStateHandler loading={loading} error={error} onRetry={reloadClients}>
+      <div className="space-y-6">
+        <FacturacionHeader vista={vista} setVista={setVista} />
         <div className="flex flex-col md:flex-row gap-4">
-          {/* Facturación resumen */}
           <FacturacionResumen
             nombreMes={nombreMes}
             añoActual={añoActual}
@@ -159,45 +82,27 @@ const mesActual = fechaActual.getMonth();
             progresoAnual={progresoAnual}
             vista={vista}
           />
-
-          {/* Indicadores */}
-          <div className="flex flex-row gap-4 w-full">
-            {/* Facturación Top 80% */}
-            <div className="w-1/2 bg-white shadow rounded-xl p-4 flex flex-col justify-center items-center">
-              <p className="text-gray-500 text-sm">Facturación Top 20</p>
-              <p className="text-xl font-bold text-gray-800">
-                {facturacionTop80.toLocaleString("es-ES", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
-              </p>
-            </div>
-
-            {/* Clientes inactivos */}
-            <div className="w-1/2 bg-white shadow rounded-xl p-4 flex flex-col justify-center items-center">
-              <p className="text-gray-500 text-sm">Clientes inactivos</p>
-              <div className="flex items-baseline gap-1">
-                <p className="text-2xl sm:text-3xl font-bold text-red-600">
-                  {clientesInactivos}
-                </p>
-                <p className="text-gray-400 text-sm">/ {clients.length}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Detalle de clientes */}
-        <div className="mt-6">
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            Detalle de clientes
-          </h3>
-          <ClientList
-            clients={transformedClients}
+          <FacturacionIndicadores
+            clients={clients}
             vista={vista}
             mesActual={mesActual}
-            añoActual={añoActual}
+            clientesInactivos={clientesInactivosLista}
+            onShowInactivos={() => setShowInactivosModal(true)}
           />
         </div>
+
+        <FacturacionClientes
+          clients={transformedClients}
+          vista={vista}
+          mesActual={mesActual}
+          añoActual={añoActual}
+        />
+
+        <FacturacionModalInactivos
+          open={showInactivosModal}
+          onClose={() => setShowInactivosModal(false)}
+          clientesInactivos={clientesInactivosLista}
+        />
       </div>
     </DataStateHandler>
   );
