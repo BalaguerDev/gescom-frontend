@@ -6,7 +6,7 @@ const AuthProvider = ({ children }) => {
   const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
   if (!domain || !clientId) {
-    console.error("⚠️ Faltan variables de entorno de Auth0");
+    console.error("⚠️ Faltan variables de entorno para Auth0: VITE_AUTH0_DOMAIN o VITE_AUTH0_CLIENT_ID");
     return null;
   }
 

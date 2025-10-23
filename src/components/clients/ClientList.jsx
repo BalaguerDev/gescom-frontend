@@ -7,13 +7,14 @@ const ClientList = ({ clients, vista, mesActual, añoActual }) => {
   const [selectedClient, setSelectedClient] = useState(null);
   const handleCloseModal = () => setSelectedClient(null);
 
+  // Transforma los datos según la vista
   const transformed = transformClients(clients, vista, mesActual, añoActual);
 
   return (
     <>
       <ClientTable
         clients={transformed}
-        vista={vista}
+        vista={vista} 
         mesActual={mesActual}
         añoActual={añoActual}
         onSelect={setSelectedClient}

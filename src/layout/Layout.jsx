@@ -6,11 +6,12 @@ import BottomNavMobile from "@/components/layout/BottomNavMobile";
 const Layout = () => (
   <div className="flex h-screen bg-gray-50">
     <Sidebar />
+
     <main className="flex-1 flex flex-col">
       <NavbarMobile />
-      <div className="flex-1 overflow-y-auto p-4">
-        <Outlet /> 
-      </div>
+      <section className="flex-1 overflow-y-auto p-4">
+        <Outlet />
+      </section >
       <BottomNavMobile />
     </main>
   </div>

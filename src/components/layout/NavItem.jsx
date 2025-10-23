@@ -1,13 +1,18 @@
-const NavItem = ({ name, icon: Icon, path, isActive, onClick }) => {
-  const textColor = isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600";
+const NavItem = ({ name, icon: Icon, isActive, onClick }) => {
+  const baseClasses =
+    "flex flex-col items-center text-xs transition-colors duration-200";
+  const activeClass = isActive
+    ? "text-blue-600"
+    : "text-gray-600 hover:text-blue-600";
 
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center transition ${textColor}`}
+      className={`${baseClasses} ${activeClass}`}
+      aria-label={name}
     >
       <Icon className="w-6 h-6" />
-      <span className="text-xs">{name}</span>
+      <span>{name}</span>
     </button>
   );
 };
