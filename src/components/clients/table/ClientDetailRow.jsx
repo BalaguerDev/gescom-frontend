@@ -24,7 +24,7 @@ const ClientDetailRow = ({ client, vista, mesActual }) => {
   let familiasCurrent = {};
   let familiasLast = {};
 
-  if (vista === "anual") {
+  if (vista === "año") {
     for (const m of client.revenueCurrentYear || []) {
       const families = m?.families || {};
       for (const k of Object.keys(families)) {

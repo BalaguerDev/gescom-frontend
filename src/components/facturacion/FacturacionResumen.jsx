@@ -11,12 +11,12 @@ export const FacturacionResumen = ({
   progresoAnual,
   vista,
 }) => {
-  const facturado = vista === "anual" ? totalFacturacion : mensualFacturacion;
-  const objetivo = vista === "anual" ? objetivoAnual : objetivoMensual;
-  const progreso = vista === "anual" ? progresoAnual : progresoMensual;
+  const facturado = vista === "año" ? totalFacturacion : mensualFacturacion;
+  const objetivo = vista === "año" ? objetivoAnual : objetivoMensual;
+  const progreso = vista === "año" ? progresoAnual : progresoMensual;
   const titulo =
-    vista === "anual"
-      ? `Facturación anual ${añoActual}`
+    vista === "año"
+      ? `Facturación año ${añoActual}`
       : `Facturación ${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)} de ${añoActual}`;
 
   return (

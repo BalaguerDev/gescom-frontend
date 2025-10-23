@@ -9,7 +9,7 @@ const Layout = () => (
 
     <main className="flex-1 flex flex-col">
       <NavbarMobile />
-      <section className="flex-1 overflow-y-auto p-4">
+      <section className="flex-1 overflow-y-auto p-[20px] sm:p-10">
         <Outlet />
       </section >
       <BottomNavMobile />

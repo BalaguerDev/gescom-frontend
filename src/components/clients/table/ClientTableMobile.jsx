@@ -30,7 +30,7 @@ const ClientTableMobile = ({
     }
 
     return (
-        <div className="sm:hidden mt-4 border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <div className="sm:hidden mt-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-visible">
             {/* === CABECERA === */}
             <div className="grid grid-cols-[1.5fr_2fr_0.5fr] bg-gray-100 text-[12px] font-semibold text-gray-700 border-b border-gray-200">
                 <div className="px-3 py-2 flex items-center">Empresa</div>
@@ -56,7 +56,7 @@ const ClientTableMobile = ({
                 let familiasCurrent = {};
                 let familiasLast = {};
 
-                if (vista === "anual") {
+                if (vista === "año") {
                     for (const m of client.revenueCurrentYear || []) {
                         const families = m?.families || {};
                         for (const k of Object.keys(families)) {

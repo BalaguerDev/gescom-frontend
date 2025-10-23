@@ -16,11 +16,11 @@ export const transformClients = (clients = [], vista, mesActual) => {
       const mensualActual = mesActualData.total || 0;
 
       // 🔹 Determinar qué mostrar según la vista
-      const displayAnterior = vista === "anual" ? totalLast : mensualAnterior;
-      const displayActual = vista === "anual" ? totalCurrent : mensualActual;
+      const displayAnterior = vista === "año" ? totalLast : mensualAnterior;
+      const displayActual = vista === "año" ? totalCurrent : mensualActual;
 
       // 🔹 Porcentaje de crecimiento
-      const base = vista === "anual" ? totalLast : mensualAnterior;
+      const base = vista === "año" ? totalLast : mensualAnterior;
       const displayCrecimiento = base ? ((displayActual - base) / base) * 100 : 0;
 
       // 🔹 Familias agregadas (solo si las usas en tabla)

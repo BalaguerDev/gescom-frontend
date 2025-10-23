@@ -8,18 +8,18 @@ const FacturacionIndicadores = ({ clients, vista, mesActual, clientesInactivos, 
   });
 
   const total = clientsWithMonthly.reduce(
-    (sum, c) => sum + (vista === "anual" ? c.totalCurrent : c.revenueCurrentMonth ?? 0),
+    (sum, c) => sum + (vista === "año" ? c.totalCurrent : c.revenueCurrentMonth ?? 0),
     0
   );
 
   const sorted = [...clientsWithMonthly].sort((a, b) =>
-    vista === "anual" ? b.totalCurrent - a.totalCurrent : (b.revenueCurrentMonth ?? 0) - (a.revenueCurrentMonth ?? 0)
+    vista === "año" ? b.totalCurrent - a.totalCurrent : (b.revenueCurrentMonth ?? 0) - (a.revenueCurrentMonth ?? 0)
   );
 
   let acumulado = 0;
   let index80 = 0;
   for (let i = 0; i < sorted.length; i++) {
-    acumulado += vista === "anual" ? sorted[i].totalCurrent : sorted[i].revenueCurrentMonth ?? 0;
+    acumulado += vista === "año" ? sorted[i].totalCurrent : sorted[i].revenueCurrentMonth ?? 0;
     if (acumulado / total >= 0.8) {
       index80 = i + 1;
       break;
@@ -27,7 +27,7 @@ const FacturacionIndicadores = ({ clients, vista, mesActual, clientesInactivos, 
   }
 
   const facturacionTop80 = sorted.slice(0, index80).reduce(
-    (sum, c) => sum + (vista === "anual" ? c.totalCurrent : c.revenueCurrentMonth ?? 0),
+    (sum, c) => sum + (vista === "año" ? c.totalCurrent : c.revenueCurrentMonth ?? 0),
     0
   );
 
