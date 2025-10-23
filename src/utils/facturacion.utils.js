@@ -1,9 +1,30 @@
 export const calcularFacturacion = (clients = [], mesActual) => {
-  const total = clients.reduce((sum, c) => sum + (c.totalCurrent || 0), 0);
-  const mensual = clients.reduce(
-    (sum, c) => sum + (c.revenueCurrentYear?.[mesActual] || 0),
-    0
-  );
+  if (!Array.isArray(clients) || clients.length === 0) {
+    return { total: 0, mensual: 0 };
+  }
+
+  let total = 0;
+  let mensual = 0;
+
+  for (const c of clients) {
+    // ✅ Total anual (usa totalCurrent si existe o suma revenueCurrentYear)
+    const totalAnual =
+      typeof c.totalCurrent === "number"
+        ? c.totalCurrent
+        : Array.isArray(c.revenueCurrentYear)
+        ? c.revenueCurrentYear.reduce((sum, m) => sum + (m?.total || 0), 0)
+        : 0;
+
+    total += totalAnual;
+
+    // ✅ Total mensual (busca por month)
+    const mesData = Array.isArray(c.revenueCurrentYear)
+      ? c.revenueCurrentYear.find((m) => m.month === mesActual)
+      : null;
+
+    mensual += mesData?.total || 0;
+  }
+
   return { total, mensual };
 };
 

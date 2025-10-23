@@ -14,11 +14,10 @@ const ClientTable = ({ clients = [], onSelect, vista, mesActual, añoActual }) =
       </div>
     );
   }
-
   const mesNombre = formatters.monthName(mesActual);
   const añoAnterior = añoActual - 1;
   const headerAnterior =
-    vista === "anual" ? "Total año pasado" : `${mesNombre} ${añoAnterior}`;
+    vista === "anual" ? "Año pasado" : `${mesNombre} ${añoAnterior}`;
   const headerActual =
     vista === "anual" ? "Total actual" : `${mesNombre} ${añoActual}`;
 
@@ -30,6 +29,8 @@ const ClientTable = ({ clients = [], onSelect, vista, mesActual, añoActual }) =
         onSelect={onSelect}
         headerAnterior={headerAnterior}
         headerActual={headerActual}
+        vista={vista}
+
       />
 
       {/* 🔹 Escritorio */}
@@ -46,8 +47,10 @@ const ClientTable = ({ clients = [], onSelect, vista, mesActual, añoActual }) =
               openRow={openRow}
               setOpenRow={setOpenRow}
               onSelect={onSelect}
-              headerAnterior={headerAnterior}
+              vista={vista}
               headerActual={headerActual}
+              headerAnterior={headerAnterior}
+              mesActual={mesActual + 1}
             />
           ))}
         </table>
