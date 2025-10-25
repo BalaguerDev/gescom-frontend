@@ -24,7 +24,7 @@ const ClientTable = ({ clients = [], onSelect, vista, mesActual, añoActual }) =
   return (
     <>
       {/* 🔹 Móvil */}
-      <div className="overflow-y-auto sm:pb-6 pb-15">
+      <div className="overflow-y-auto pb-10 sm:pb-0">
         <ClientTableMobile
           clients={clients}
           onSelect={onSelect}

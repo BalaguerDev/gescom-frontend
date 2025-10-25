@@ -2,26 +2,20 @@ import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { DataStateHandler } from "@/components/ui";
 import { useClients } from "@/hooks/useClients";
-import { FacturacionResumen } from "@/components/facturacion";
-import { useFacturacion } from "@/hooks/useFacturacion";
-import FacturacionHeader from "@/components/facturacion/FacturacionHeader";
-import FacturacionIndicadores from "@/components/facturacion/FacturacionIndicadores";
-import FacturacionClientes from "@/components/facturacion/FacturacionClientes";
-import FacturacionModalInactivos from "@/components/facturacion/FacturacionModalInactivos";
-import { formatters } from "@/utils/formatters";
+import InactiveCustomersModal from "../components/clients/ClientesInactivosModal";
+import { assignClientSegments } from "@/utils/clientSegmentation";
+import ClientKPIs from "../components/clients/ClientKPIs";
+import { SearchInput, ToggleVista } from "../components/ui";
+import ClientTableContainer from "../components/clients/table/ClientTableContainer";
 
-const Facturacion = () => {
+const ClientPage = () => {
   const { getAccessTokenSilently } = useAuth0();
   const { clients, loading, error, reloadClients } = useClients(getAccessTokenSilently);
+  const clientsSegmented = assignClientSegments(clients);
 
   const fechaActual = new Date();
   const mesActual = fechaActual.getMonth();
   const añoActual = fechaActual.getFullYear();
-  const nombreMes = formatters.month(fechaActual);
-  const objetivos = { anual: 5_600_000, mensual: 380_000 };
-
-  const { totalFacturacion, mensualFacturacion, progresoAnual, progresoMensual } =
-    useFacturacion(clients, mesActual, objetivos);
 
   const [vista, setVista] = useState("mes");
   const [showInactivosModal, setShowInactivosModal] = useState(false);
@@ -36,7 +30,7 @@ const Facturacion = () => {
   });
 
   // 🧮 Transformar clientes
-  const transformedClients = clients
+  const transformedClients = clientsSegmented
     .map((c) => {
       const mesData = c.revenueCurrentYear?.find((m) => m.month === mesActual);
       const mensualActual = mesData?.total ?? 0;
@@ -74,38 +68,39 @@ const Facturacion = () => {
 
   return (
     <DataStateHandler loading={loading} error={error} onRetry={reloadClients}>
-      <div className="space-y-6">
-        <FacturacionHeader vista={vista} setVista={setVista} onSearchChange={setSearchTerm} />
+      <div className="space-y-5">
+        <h2 className="text-xl font-semibold text-gray-900">
+          Resumen Clientes
+        </h2>
 
-        <div className="flex flex-col md:flex-row gap-4">
-          <FacturacionResumen
-            nombreMes={nombreMes}
-            añoActual={añoActual}
-            mensualFacturacion={mensualFacturacion}
-            objetivoMensual={objetivos.mensual}
-            totalFacturacion={totalFacturacion}
-            objetivoAnual={objetivos.anual}
-            progresoMensual={progresoMensual}
-            progresoAnual={progresoAnual}
-            vista={vista}
-          />
-          <FacturacionIndicadores
-            clients={clients}
-            vista={vista}
-            mesActual={mesActual}
-            clientesInactivos={clientesInactivosLista}
-            onShowInactivos={() => setShowInactivosModal(true)}
-          />
+        {/* 🧩 Cards superiores: Inactivos, Nuevos, Activos*/}
+        <ClientKPIs
+          clients={clientsSegmented}
+          clientesInactivos={clientesInactivosLista}
+          onShowInactivos={() => setShowInactivosModal(true)}
+        />
+
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {/* 🔍 Buscador */}
+          <div className="flex-1 min-w-[180px]">
+            <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          </div>
+
+          {/* 🔄 Toggle vista */}
+          <div className="shrink-0">
+            <ToggleVista vista={vista} setVista={setVista} />
+          </div>
         </div>
-
-        <FacturacionClientes
+        {/* 📋 Listado de clientes */}
+        <ClientTableContainer
           clients={filteredClients}
           vista={vista}
           mesActual={mesActual}
           añoActual={añoActual}
         />
 
-        <FacturacionModalInactivos
+        {/* 🪄 Modal de clientes inactivos */}
+        <InactiveCustomersModal
           open={showInactivosModal}
           onClose={() => setShowInactivosModal(false)}
           clientesInactivos={clientesInactivosLista}
@@ -115,4 +110,4 @@ const Facturacion = () => {
   );
 };
 
-export default Facturacion;
+export default ClientPage;

@@ -11,7 +11,7 @@ export const fetchClients = async (getAccessTokenSilently) => {
         })
 
         if (!response.ok) throw new Error("Error al obtener clientes")
-        const { data } = await response.json()
+        const  data  = await response.json()
         return { success: true, data }
 
     } catch (error) {

@@ -2,7 +2,7 @@ import Modal from "@/components/ui/Modal";
 import { formatters } from "@/utils/formatters";
 import { Phone } from "lucide-react";
 
-const FacturacionModalInactivos = ({ open, onClose, clientesInactivos }) => {
+const InactiveCustomersModal = ({ open, onClose, clientesInactivos }) => {
   // Ordenar clientes: los que llevan menos días sin pedir primero
   const sortedClients = [...clientesInactivos].sort((a, b) => {
     const lastOrderA = a.orders?.length
@@ -15,7 +15,7 @@ const FacturacionModalInactivos = ({ open, onClose, clientesInactivos }) => {
     const diffA = lastOrderA ? (Date.now() - lastOrderA) / (1000 * 60 * 60 * 24) : Infinity;
     const diffB = lastOrderB ? (Date.now() - lastOrderB) / (1000 * 60 * 60 * 24) : Infinity;
 
-    return diffA - diffB; // menor número de días primero
+    return diffA - diffB;
   });
 
   return (
@@ -82,4 +82,4 @@ const FacturacionModalInactivos = ({ open, onClose, clientesInactivos }) => {
   );
 };
 
-export default FacturacionModalInactivos;
+export default InactiveCustomersModal;

@@ -1,9 +1,9 @@
 
 
 
-const ClientesMapa = () => {
+const RoutesPage = () => {
     return (<>
-        <h2 className="text-2xl font-semibold mb-4">Clientes en mapa</h2>
+        <h2 className="text-2xl font-semibold mb-4">Rutas</h2>
         <p className="text-gray-600">
             Visualiza y gestiona todos tus clientes
         </p>
@@ -11,4 +11,4 @@ const ClientesMapa = () => {
     );
 };
 
-export default ClientesMapa;
+export default RoutesPage;

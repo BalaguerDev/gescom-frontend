@@ -1,19 +1,13 @@
 import Modal from "@/components/ui/Modal";
 import { useClientModal } from "@/hooks/useClientModal";
-import { ClientCampañas, ClientContacto, ClientPedidos, PedidoDetalle } from "./modal";
-import ClientModalTabs from "./modal/ClientModalTab";
-
+import ClientModalTabs from "./ClientModalTabs";
+import ClientOrderDetails from "./ClientOrderDetails";
+import ClientContacto from "./ClientContact";
+import ClientOrders from "./ClientOrders";
+import ClientCampaign from "./ClientCampaign";
 
 const ClientModal = ({ client, isOpen, onClose }) => {
-  const {
-    activeSection,
-    setActiveSection,
-    pedidoDetalle,
-    setPedidoDetalle,
-    ultimosPedidos,
-    campañas,
-    tabs,
-  } = useClientModal(client);
+  const { activeSection, setActiveSection, pedidoDetalle, setPedidoDetalle, ultimosPedidos, campanas, tabs } = useClientModal(client);
 
   if (!client) {
     return (
@@ -34,26 +28,16 @@ const ClientModal = ({ client, isOpen, onClose }) => {
       arrowBack={pedidoDetalle ? () => setPedidoDetalle(null) : null}
     >
       <div className="flex flex-col gap-4">
-        {!pedidoDetalle && (
-          <ClientModalTabs
-            tabs={tabs}
-            activeSection={activeSection}
-            onSelect={(id) => {
-              setActiveSection(id);
-              setPedidoDetalle(null);
-            }}
-          />
-        )}
-
+        {!pedidoDetalle && <ClientModalTabs tabs={tabs} activeSection={activeSection} onSelect={(id) => { setActiveSection(id); setPedidoDetalle(null); }} />}
         <div className="mt-4 flex-1 overflow-auto">
           {pedidoDetalle ? (
-            <PedidoDetalle pedido={pedidoDetalle} />
+            <ClientOrderDetails pedido={pedidoDetalle} />
           ) : activeSection === "contacto" ? (
             <ClientContacto client={client} />
           ) : activeSection === "pedidos" ? (
-            <ClientPedidos pedidos={ultimosPedidos} onSelectPedido={setPedidoDetalle} />
+            <ClientOrders pedidos={ultimosPedidos} onSelectPedido={setPedidoDetalle} />
           ) : activeSection === "campañas" ? (
-            <ClientCampañas campañas={campañas} />
+            <ClientCampaign campanas={campanas} />
           ) : null}
         </div>
       </div>
