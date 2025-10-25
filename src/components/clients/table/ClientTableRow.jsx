@@ -9,7 +9,7 @@ const ClientTableRow = ({
     onSelect,
     headerAnterior,
     headerActual,
-    vista, 
+    vista,
 }) => {
     const isOpen = openRow === client.id;
     const toggleOpen = () => setOpenRow(isOpen ? null : client.id);
@@ -27,8 +27,22 @@ const ClientTableRow = ({
                     ) : (
                         <ChevronDown size={16} className="text-gray-500" />
                     )}
+                    {/* Badge de segmento */}
+                    {client.segment && (
+                        <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${client.segment === "A"
+                                    ? "bg-green-100 text-green-700"
+                                    : client.segment === "B"
+                                        ? "bg-orange-100 text-orange-700"
+                                        : "bg-red-100 text-red-700"
+                                }`}
+                        >
+                            {client.segment}
+                        </span>
+                    )}
                     {client.name}
                 </td>
+
 
                 <td className="px-4 py-3 text-right text-gray-600">
                     {formatters.currency(client.displayAnterior)}
@@ -60,7 +74,7 @@ const ClientTableRow = ({
                     mesActual={new Date().getMonth() - 1}
                     headerActual={headerActual}
                     headerAnterior={headerAnterior}
-                    
+
                 />
             )}
         </tbody>

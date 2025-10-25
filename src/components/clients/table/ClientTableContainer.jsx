@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { transformClients } from "@/utils/client.utils";
-import { ClientTable } from "./table";
-import ClientModal from "./ClientModal";
+import { ClientTable } from ".";
+import ClientModal from "../modal/ClientModal";
 
-const ClientList = ({ clients, vista, mesActual, añoActual }) => {
+const ClientTableContainer = ({ clients, vista, mesActual, añoActual }) => {
   const [selectedClient, setSelectedClient] = useState(null);
   const handleCloseModal = () => setSelectedClient(null);
 
@@ -29,4 +29,4 @@ const ClientList = ({ clients, vista, mesActual, añoActual }) => {
   );
 };
 
-export default ClientList;
+export default ClientTableContainer;
