@@ -3,9 +3,11 @@
 
 const RoutesPage = () => {
     return (<>
-        <h2 className="text-2xl font-semibold mb-4">Rutas</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 leading-snug">
+            Rutero
+        </h2>
         <p className="text-gray-600">
-            Visualiza y gestiona todos tus clientes
+            Verifica tus rutas mensuales
         </p>
     </>
     );
