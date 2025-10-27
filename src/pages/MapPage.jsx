@@ -8,12 +8,13 @@ import { MapView } from "../components/zones/MapView";
 import { ZoneList } from "../components/zones/ZoneList";
 import { ClientList } from "../components/zones/ClientList";
 import { ZoneModal } from "../components/zones/ZoneModal";
+import { GOOGLE_MAP_LIBRARIES } from "../constants/googleLibraries";
 
 export default function MapPage() {
   const logic = useZonesLogic();
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-    libraries: ["drawing", "geometry"],
+    libraries: GOOGLE_MAP_LIBRARIES,
   });
 
   if (!isLoaded || logic.loading)

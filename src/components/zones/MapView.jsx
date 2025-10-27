@@ -1,7 +1,7 @@
-// src/features/zones/components/MapView.jsx
 "use client";
 
-import { GoogleMap, DrawingManager, Marker, Polygon, InfoWindow } from "@react-google-maps/api";
+import { useEffect } from "react";
+import { GoogleMap, DrawingManager, Polygon, InfoWindow } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
@@ -20,29 +20,49 @@ export const MapView = ({
   onLoad,
   handlePolygonComplete,
 }) => {
+  // Cargar AdvancedMarkerElement dinámicamente
+  useEffect(() => {
+    const loadAdvancedMarkers = async () => {
+      if (!window.google?.maps) return;
+      await google.maps.importLibrary("marker");
+    };
+    loadAdvancedMarkers();
+  }, []);
+
+  const handleMapLoad = async (map) => {
+    onLoad(map);
+
+    // Cargamos la librería de marcadores avanzados
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+    // Crear marcadores avanzados manualmente
+    clients.forEach((client) => {
+      if (client.lat && client.lng) {
+        const marker = new AdvancedMarkerElement({
+          map,
+          position: { lat: client.lat, lng: client.lng },
+          title: client.name,
+        });
+
+        // Evento de click
+        marker.addListener("click", () => {
+          setSelectedClient(client);
+        });
+      }
+    });
+  };
+
   return (
     <GoogleMap
-      onLoad={onLoad}
+      onLoad={handleMapLoad}
       mapContainerStyle={containerStyle}
       options={{
         disableDefaultUI: true,
         mapTypeId: "roadmap",
         clickableIcons: false,
+        mapId: import.meta.env.VITE_GOOGLE_MAP_ID || "DEMO_MAP_ID", // ← necesario
       }}
     >
-      {/* Marcadores de clientes */}
-      {clients.map(
-        (client) =>
-          client.lat &&
-          client.lng && (
-            <Marker
-              key={client.id}
-              position={{ lat: client.lat, lng: client.lng }}
-              onClick={() => setSelectedClient(client)}
-            />
-          )
-      )}
-
       {/* InfoWindow cliente */}
       {selectedClient && (
         <InfoWindow
