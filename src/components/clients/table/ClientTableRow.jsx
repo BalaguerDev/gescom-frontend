@@ -31,10 +31,10 @@ const ClientTableRow = ({
                     {client.segment && (
                         <span
                             className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${client.segment === "A"
-                                    ? "bg-green-100 text-green-700"
-                                    : client.segment === "B"
-                                        ? "bg-orange-100 text-orange-700"
-                                        : "bg-red-100 text-red-700"
+                                ? "bg-green-100 text-green-700"
+                                : client.segment === "B"
+                                    ? "bg-orange-100 text-orange-700"
+                                    : "bg-red-100 text-red-700"
                                 }`}
                         >
                             {client.segment}
@@ -71,7 +71,7 @@ const ClientTableRow = ({
                 <ClientDetailRow
                     client={client}
                     vista={vista}
-                    mesActual={new Date().getMonth() - 1}
+                    mesActual={new Date().getMonth() + 1}
                     headerActual={headerActual}
                     headerAnterior={headerAnterior}
 

@@ -18,8 +18,11 @@ const findMonthData = (arr, monthIndexCandidate) => {
 };
 
 const ClientDetailRow = ({ client, vista, mesActual }) => {
-  const mesCandidate =
-    typeof mesActual === "number" ? mesActual : new Date().getMonth() + 1;
+  const now = new Date();
+  const mesNatural = now.getMonth() + 1;
+
+  const mesCandidate = typeof mesActual === "number" ? mesActual : mesNatural;
+
 
   let familiasCurrent = {};
   let familiasLast = {};

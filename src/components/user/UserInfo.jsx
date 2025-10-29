@@ -16,8 +16,11 @@ const UserInfo = ({ className }) => {
         onClick={() => setIsModalOpen(true)}
         className={`px-6 py-4 border-t border-gray-200 flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition-all duration-200 ${className}`}
       >
-        {user?.picture && !imgError ? (
-          <UserAvatarButton user={user} onClick={() => setIsModalOpen(true)} />
+        {user?.userImage && !imgError ? (
+          <UserAvatarButton
+            user={user}
+            onClick={() => setIsModalOpen(true)}
+          />
         ) : (
           <div className="w-10 h-10 rounded-full border border-gray-300 bg-gray-100 flex items-center justify-center">
             <CircleUserRound className="w-6 h-6 text-gray-500" />
@@ -28,11 +31,15 @@ const UserInfo = ({ className }) => {
           <p className="text-sm font-semibold text-gray-800">
             {user?.name || "Usuario"}
           </p>
-          <p className="text-xs text-gray-500">Comercial</p>
+          <p className="text-xs text-gray-500">{user?.email || "Comercial"}</p>
         </div>
       </div>
 
-      <UserModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <UserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        user={user}
+      />
     </>
   );
 };

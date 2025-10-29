@@ -1,2 +1,14 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
+
+/* SAFE AREA PARA IPHONE */
+@supports (padding: max(0px)) {
+  main > section {
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+    padding-top: max(env(safe-area-inset-top), 20px);
+  }
+}
+
+html, body {
+  overflow-x: hidden;
+}
