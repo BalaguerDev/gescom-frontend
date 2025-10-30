@@ -44,9 +44,8 @@ export default function RouteClientIndicators({
             </span>
           </p>
           <p
-            className={`text-xs sm:text-sm font-medium ${
-              growth >= 0 ? "text-emerald-600" : "text-red-600"
-            }`}
+            className={`text-xs sm:text-sm font-medium ${growth >= 0 ? "text-emerald-600" : "text-red-600"
+              }`}
           >
             {growth >= 0 ? "▲" : "▼"} {formatters.percentage(growth)} año anterior
           </p>
@@ -66,9 +65,8 @@ export default function RouteClientIndicators({
             </span>
           </p>
           <p
-            className={`text-xs sm:text-sm font-medium ${
-              monthlyGrowth >= 0 ? "text-emerald-600" : "text-red-600"
-            }`}
+            className={`text-xs sm:text-sm font-medium ${monthlyGrowth >= 0 ? "text-emerald-600" : "text-red-600"
+              }`}
           >
             {monthlyGrowth >= 0 ? "▲" : "▼"}{" "}
             {formatters.percentage(monthlyGrowth)} este mes
@@ -78,12 +76,10 @@ export default function RouteClientIndicators({
 
       {/* 🧱 % Consecución */}
       <Card title="% Consecución">
-          <p className="text-xl sm:text-2xl lg:text-2xl xl:text-3xl font-semibold">
-          {targetProgress}%
-        </p>
+        <p className="text-xl sm:text-2xl font-semibold">{targetProgress}%</p>
         <div className="w-full bg-gray-200 h-2 mt-2 rounded-full overflow-hidden">
           <div
-            className="bg-indigo-500 h-2 transition-all"
+            className={`h-2 transition-all ${targetProgress >= 100 ? 'bg-green-500' : 'bg-indigo-500'}`}
             style={{ width: `${targetProgress}%` }}
           />
         </div>
