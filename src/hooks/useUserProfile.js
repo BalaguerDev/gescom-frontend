@@ -20,8 +20,9 @@ export const useUserProfile = (API_URL) => {
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
 
-        // 👇 Ajuste importante
-        setProfile(data.user || data);
+        const userData = data.user || data;
+        setProfile(userData);
+
       } catch (err) {
         console.error("❌ Error cargando perfil:", err);
         setErrorProfile(err);

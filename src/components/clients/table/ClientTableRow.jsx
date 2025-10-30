@@ -28,16 +28,16 @@ const ClientTableRow = ({
                         <ChevronDown size={16} className="text-gray-500" />
                     )}
                     {/* Badge de segmento */}
-                    {client.segment && (
+                    {client.type && (
                         <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${client.segment === "A"
-                                ? "bg-green-100 text-green-700"
-                                : client.segment === "B"
-                                    ? "bg-orange-100 text-orange-700"
-                                    : "bg-red-100 text-red-700"
+                            className={`text-[10px] font-bold px-2 py-1 rounded- ${client.type === "A"
+                                    ? "bg-green-100 text-green-700"
+                                    : client.type === "B"
+                                        ? "bg-yellow-100 text-yellow-700"
+                                        : "bg-red-100 text-red-700"
                                 }`}
                         >
-                            {client.segment}
+                            {client.type}
                         </span>
                     )}
                     {client.name}

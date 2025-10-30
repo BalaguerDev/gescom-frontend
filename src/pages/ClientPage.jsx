@@ -3,15 +3,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { DataStateHandler } from "@/components/ui";
 import { useClients } from "@/hooks/useClients";
 import InactiveCustomersModal from "../components/clients/ClientesInactivosModal";
-import { assignClientSegments } from "@/utils/clientSegmentation";
 import ClientKPIs from "../components/clients/ClientKPIs";
 import { SearchInput, ToggleVista } from "../components/ui";
 import ClientTableContainer from "../components/clients/table/ClientTableContainer";
+import { usePareto } from "@/hooks/usePareto";
 
 const ClientPage = () => {
   const { getAccessTokenSilently } = useAuth0();
   const { clients, loading, error, reloadClients } = useClients(getAccessTokenSilently);
-  const clientsSegmented = assignClientSegments(clients);
 
   const fechaActual = new Date();
   const mesActual = fechaActual.getMonth();
@@ -29,42 +28,39 @@ const ClientPage = () => {
     return diffDays > 90;
   });
 
-  // 🧮 Transformar clientes
-  const transformedClients = clientsSegmented
-    .map((c) => {
-      const mesData = c.revenueCurrentYear?.find((m) => m.month === mesActual);
-      const mensualActual = mesData?.total ?? 0;
-      const mensualAnterior =
-        c.revenueLastYear?.find((m) => m.month === mesActual)?.total ?? 0;
+  
+  // Clasificación fija según facturación anual
+  const { classifiedClients } = usePareto(clients);
 
-      if (vista === "año") {
-        const crecimiento = c.totalLast
-          ? ((c.totalCurrent - c.totalLast) / c.totalLast) * 100
-          : 0;
-        return {
-          ...c,
-          displayAnterior: c.totalLast ?? 0,
-          displayActual: c.totalCurrent ?? 0,
-          displayCrecimiento: crecimiento,
-        };
-      } else {
-        const crecimiento = mensualAnterior
-          ? ((mensualActual - mensualAnterior) / mensualAnterior) * 100
-          : 0;
-        return {
-          ...c,
-          displayAnterior: mensualAnterior,
-          displayActual: mensualActual,
-          displayCrecimiento: crecimiento,
-        };
-      }
-    })
-    .sort((a, b) => b.displayActual - a.displayActual);
+  // Luego cruzamos los datos con los de la vista mensual o anual
+  const transformedClients = classifiedClients.map((c) => {
+    const mesData = c.revenueCurrentYear?.find((m) => m.month === mesActual);
+    const mensualActual = mesData?.total ?? 0;
+    const mensualAnterior =
+      c.revenueLastYear?.find((m) => m.month === mesActual)?.total ?? 0;
 
-  // 🔍 Filtrar clientes por búsqueda
-  const filteredClients = transformedClients.filter((c) =>
-    c.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    if (vista === "año") {
+      const crecimiento = c.totalLast
+        ? ((c.totalCurrent - c.totalLast) / c.totalLast) * 100
+        : 0;
+      return {
+        ...c,
+        displayAnterior: c.totalLast ?? 0,
+        displayActual: c.totalCurrent ?? 0,
+        displayCrecimiento: crecimiento,
+      };
+    } else {
+      const crecimiento = mensualAnterior
+        ? ((mensualActual - mensualAnterior) / mensualAnterior) * 100
+        : 0;
+      return {
+        ...c,
+        displayAnterior: mensualAnterior,
+        displayActual: mensualActual,
+        displayCrecimiento: crecimiento,
+      };
+    }
+  });
 
   return (
     <DataStateHandler loading={loading} error={error} onRetry={reloadClients}>
@@ -73,33 +69,31 @@ const ClientPage = () => {
           Resumen Clientes
         </h2>
 
-        {/* 🧩 Cards superiores: Inactivos, Nuevos, Activos*/}
+        {/* KPIs */}
         <ClientKPIs
-          clients={clientsSegmented}
+          clients={classifiedClients}
           clientesInactivos={clientesInactivosLista}
           onShowInactivos={() => setShowInactivosModal(true)}
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* 🔍 Buscador */}
           <div className="flex-1 min-w-[180px]">
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
           </div>
-
-          {/* 🔄 Toggle vista */}
           <div className="shrink-0">
             <ToggleVista vista={vista} setVista={setVista} />
           </div>
         </div>
-        {/* 📋 Listado de clientes */}
+
+        {/* 📋 Tabla de clientes */}
         <ClientTableContainer
-          clients={filteredClients}
+          clients={classifiedClients}
           vista={vista}
           mesActual={mesActual}
           añoActual={añoActual}
         />
 
-        {/* 🪄 Modal de clientes inactivos */}
+        {/* Modal de inactivos */}
         <InactiveCustomersModal
           open={showInactivosModal}
           onClose={() => setShowInactivosModal(false)}

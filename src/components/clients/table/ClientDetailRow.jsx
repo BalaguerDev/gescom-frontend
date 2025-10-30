@@ -1,4 +1,3 @@
-// src/components/clients/table/ClientDetailRow.jsx
 import { formatters } from "@/utils/formatters";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
@@ -20,24 +19,31 @@ const findMonthData = (arr, monthIndexCandidate) => {
 const ClientDetailRow = ({ client, vista, mesActual }) => {
   const now = new Date();
   const mesNatural = now.getMonth() + 1;
-
   const mesCandidate = typeof mesActual === "number" ? mesActual : mesNatural;
-
 
   let familiasCurrent = {};
   let familiasLast = {};
 
   if (vista === "año") {
+    // 🔹 Acumular desde enero hasta mes actual del año actual
     for (const m of client.revenueCurrentYear || []) {
-      const families = m?.families || {};
-      for (const k of Object.keys(families)) {
-        familiasCurrent[k] = (familiasCurrent[k] || 0) + Number(families[k] || 0);
+      const mm = typeof m.month === "string" ? Number(m.month) : m.month;
+      if (mm <= mesCandidate) {
+        const families = m?.families || {};
+        for (const k of Object.keys(families)) {
+          familiasCurrent[k] = (familiasCurrent[k] || 0) + Number(families[k] || 0);
+        }
       }
     }
+
+    // 🔹 Acumular desde enero hasta mes actual del año anterior
     for (const m of client.revenueLastYear || []) {
-      const families = m?.families || {};
-      for (const k of Object.keys(families)) {
-        familiasLast[k] = (familiasLast[k] || 0) + Number(families[k] || 0);
+      const mm = typeof m.month === "string" ? Number(m.month) : m.month;
+      if (mm <= mesCandidate) {
+        const families = m?.families || {};
+        for (const k of Object.keys(families)) {
+          familiasLast[k] = (familiasLast[k] || 0) + Number(families[k] || 0);
+        }
       }
     }
   } else {
@@ -53,8 +59,7 @@ const ClientDetailRow = ({ client, vista, mesActual }) => {
       {DETAIL_FIELDS.map(({ label, key }) => {
         const actual = Number(familiasCurrent?.[key] || 0);
         const anterior = Number(familiasLast?.[key] || 0);
-        const crecimiento =
-          anterior > 0 ? ((actual - anterior) / anterior) * 100 : 0;
+        const crecimiento = anterior > 0 ? ((actual - anterior) / anterior) * 100 : 0;
         const positivo = crecimiento > 0;
         const color =
           crecimiento === 0

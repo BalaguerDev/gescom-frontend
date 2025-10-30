@@ -7,14 +7,16 @@ export const useClients = (getAccessTokenSilently) => {
   const [error, setError] = useState(null);
 
   const loadClients = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
 
     try {
-      const { success, data, error: apiError } = await fetchClients(getAccessTokenSilently)
+      const { success, data, error: apiError } = await fetchClients(getAccessTokenSilently);
 
       if (!success) throw new Error(apiError || "Error desconocido al obtener clientes");
-      setClients(data || [])
+      
+      setClients(data || []);
+
     } catch (err) {
       console.error("❌ [useClients] Error al cargar clientes:", err);
       setClients([]);
